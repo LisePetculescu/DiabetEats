@@ -1,9 +1,9 @@
 import { Text, View, StyleSheet } from "react-native";
 
-export default function AboutScreen() {
+export default function myPage() {
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>About screen</Text>
+      <Text style={styles.text}>Her kan du se de madvarer du har gemt</Text>
     </View>
   );
 }
@@ -11,7 +11,7 @@ export default function AboutScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#25292e",
+    backgroundColor: "#407088",
     justifyContent: "center",
     alignItems: "center"
   },

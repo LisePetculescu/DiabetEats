@@ -1,33 +1,41 @@
 import { Tabs } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
+import AntDesign from "@expo/vector-icons/AntDesign";
 
 export default function TabLayout() {
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: "#ffd33d",
+        tabBarActiveTintColor: "#ffb5b5",
         headerStyle: {
-          backgroundColor: "#25292e"
+          backgroundColor: "#407088"
         },
         headerShadowVisible: false,
-        headerTintColor: "#fff",
+        headerTintColor: "#ffb5b5",
+        // headerTintColor: "#fff",
         tabBarStyle: {
-          backgroundColor: "#25292e"
+          backgroundColor: "#407088"
         }
       }}
     >
       <Tabs.Screen
         name="index"
         options={{
-          title: "Home",
+          title: "",
           tabBarIcon: ({ color, focused }) => <Ionicons name={focused ? "home-sharp" : "home-outline"} color={color} size={24} />
         }}
       />
       <Tabs.Screen
-        name="about"
+        name="myPage"
         options={{
-          title: "About",
-          tabBarIcon: ({ color, focused }) => <Ionicons name={focused ? "information-circle" : "information-circle-outline"} color={color} size={24} />
+          title: "Min Side",
+          // tabBarIcon: ({ color, focused }) => <AntDesign name="bars" size={24} color={color} />
+          // tabBarIcon: ({ color, focused }) => <Ionicons name={focused ? "heart-circle" : "heart-circle-outline"} color={color} size={24} />
+          // tabBarIcon: ({ color, focused }) => <Ionicons name={focused ? "heart-dislike-circle" : "heart-dislike-circle-outline"} color={color} size={24} />
+          // tabBarIcon: ({ color, focused }) => <Ionicons name={focused ? "information-circle" : "information-circle-outline"} color={color} size={24} />
+          // tabBarIcon: ({ color, focused }) => <Ionicons name={focused ? "image" : "image-outline"} color={color} size={24} />
+          // tabBarIcon: ({ color, focused }) => <Ionicons name={focused ? "nutrition" : "nutrition-outline"} color={color} size={24} />
+          tabBarIcon: ({ color, focused }) => <Ionicons name={focused ? "person" : "person-outline"} color={color} size={24} />
         }}
       />
     </Tabs>
