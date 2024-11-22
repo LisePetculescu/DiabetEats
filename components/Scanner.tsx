@@ -6,10 +6,10 @@ import { Button, StyleSheet, Text, View, Alert } from "react-native";
 
 interface CameraProps {
   onClose: () => void;
-  BarCodeSettings?: string[];
+  //   BarCodeSettings?: string[];
 }
 
-export default function CameraScanner({ onClose, BarCodeSettings }: CameraProps) {
+export default function CameraScanner({ onClose }: CameraProps) {
   const [hasPermission, setHasPermission] = useState<boolean | null>(null);
   const [scanned, setScanned] = useState<boolean>(false);
   const router = useRouter();
@@ -53,6 +53,7 @@ export default function CameraScanner({ onClose, BarCodeSettings }: CameraProps)
           pathname: "/ProductDetails",
           params: { product: JSON.stringify(result.product) },
         });
+        onClose();
       } else {
         Alert.alert("Product Not Found", "No data available for this barcode.");
         setScanned(false);
@@ -77,7 +78,8 @@ export default function CameraScanner({ onClose, BarCodeSettings }: CameraProps)
 
   return (
     <View style={styles.cameraContainer}>
-      <CameraView style={StyleSheet.absoluteFillObject} facing="back" onBarcodeScanned={scanned ? undefined : handleBarCodeScanned} />
+      <CameraView style={styles.camera} facing="back" onBarcodeScanned={scanned ? undefined : handleBarCodeScanned} />
+      {/* <CameraView style={StyleSheet.absoluteFillObject} facing="back" onBarcodeScanned={scanned ? undefined : handleBarCodeScanned} /> */}
       <Button title="Close Camera" onPress={onClose} />
     </View>
   );
@@ -101,7 +103,8 @@ const styles = StyleSheet.create({
   },
   camera: {
     flex: 1,
-    width: "100%",
+    width: 200,
+    height: 100,
   },
   buttonContainer: {
     flex: 1,
