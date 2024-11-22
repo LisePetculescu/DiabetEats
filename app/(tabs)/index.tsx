@@ -1,7 +1,7 @@
 import { Text, View, StyleSheet } from "react-native";
 import { useState } from "react";
 import Button from "@/components/Button";
-import Camera from "@/components/Camera";
+import CameraScanner from "@/components/Camera";
 
 export default function Index() {
   const [isCameraVisible, setIsCameraVisible] = useState(false);
@@ -24,9 +24,9 @@ export default function Index() {
         <Text style={styles.infotext}>Så du kan se hvordan denne madvare kan påvirke dig ift. diabetes.</Text>
       </View>
       <View style={styles.footerContainer}>
-        <Button theme="primary" label="Check madvare" onPress={useCamera} />
+        <Button theme="primary" iconName="barcode-scan" iconSet="MaterialCommunityIcons" label="Scan madvare" onPress={useCamera} />
       </View>
-      {isCameraVisible && <Camera onClose={closeCamera} />}
+      {isCameraVisible && <CameraScanner onClose={closeCamera} />}
     </View>
   );
 }
@@ -37,27 +37,27 @@ const styles = StyleSheet.create({
     // backgroundColor: "#25292e",
     backgroundColor: "#407088",
     alignItems: "center",
-    justifyContent: "center"
+    justifyContent: "center",
   },
   text: {
-    color: "#fff"
+    color: "#fff",
   },
   textHeader: {
     flex: 1 / 4,
     fontSize: 24,
-    color: "#ffb5b5"
+    color: "#ffb5b5",
   },
   infotext: {
     fontSize: 18,
     color: "#fff",
-    paddingVertical: 10
+    paddingVertical: 10,
   },
   infoContainer: {
     flex: 2 / 4,
-    paddingHorizontal: 30
+    paddingHorizontal: 30,
   },
   footerContainer: {
     flex: 1 / 6,
-    alignItems: "center"
-  }
+    alignItems: "center",
+  },
 });

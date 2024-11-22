@@ -1,18 +1,33 @@
 import { View, StyleSheet, Pressable, Text } from "react-native";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
+import { Ionicons } from "@expo/vector-icons";
+import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 
-type Props = {
+type IoniconsName = keyof typeof Ionicons.glyphMap;
+type MaterialCommunityIconsName = keyof typeof MaterialCommunityIcons.glyphMap;
+
+interface Props {
   label: string;
-  theme?: "primary";
-  onPress?: () => void;
-};
+  theme: "primary" | "secondary";
+  onPress: () => void;
+  iconName?: IoniconsName | MaterialCommunityIconsName | string;
+  iconSet?: "Ionicons" | "MaterialCommunityIcons";
+}
 
-export default function Button({ label, theme, onPress }: Props) {
+export default function Button({ label, theme, onPress, iconName, iconSet = "Ionicons" }: Props) {
+  const IconComponent = iconSet === "Ionicons" ? Ionicons : MaterialCommunityIcons;
+
   if (theme === "primary") {
     return (
       <View style={[styles.buttonContainer, { borderWidth: 4, borderColor: "#ffcbcb", borderRadius: 18 }]}>
         <Pressable style={[styles.button, { backgroundColor: "#132743" }]} onPress={onPress}>
-          <FontAwesome name="picture-o" size={18} color="#ffcbcb" style={styles.buttonIcon} />
+         
+
+          {/* {iconName && <MaterialCommunityIcons name={iconName} size={24} color="#ffcbcb" style={styles.buttonIcon} />} */}
+          {/* {iconName && <MaterialCommunityIcons name="barcode-scan" size={24} color="#ffcbcb" style={styles.buttonIcon} />} */}
+          {iconName && <IconComponent name={iconName as any} size={24} color="#ffcbcb" style={styles.buttonIcon} />}
+
+      
           <Text style={[styles.buttonLabel, { color: "#ffcbcb" }]}>{label}</Text>
         </Pressable>
       </View>
@@ -34,7 +49,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
     alignItems: "center",
     justifyContent: "center",
-    padding: 3
+    padding: 3,
   },
   button: {
     borderRadius: 10,
@@ -42,13 +57,13 @@ const styles = StyleSheet.create({
     height: "100%",
     alignItems: "center",
     justifyContent: "center",
-    flexDirection: "row"
+    flexDirection: "row",
   },
   buttonLabel: {
     color: "#fff",
-    fontSize: 16
+    fontSize: 16,
   },
   buttonIcon: {
-    paddingRight: 8
-  }
+    paddingRight: 8,
+  },
 });
