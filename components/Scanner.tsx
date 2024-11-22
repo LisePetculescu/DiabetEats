@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { CameraView, Camera, BarcodeScanningResult } from "expo-camera";
 import { useRouter } from "expo-router";
 
-import { Button, StyleSheet, Text, View, Alert } from "react-native";
+import { Button, StyleSheet, Text, View, Alert, ActivityIndicator } from "react-native";
 
 interface CameraProps {
   onClose: () => void;
@@ -12,6 +12,7 @@ interface CameraProps {
 export default function CameraScanner({ onClose }: CameraProps) {
   const [hasPermission, setHasPermission] = useState<boolean | null>(null);
   const [scanned, setScanned] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -41,12 +42,12 @@ export default function CameraScanner({ onClose }: CameraProps) {
   }
   const handleBarCodeScanned = async ({ type, data }: BarcodeScanningResult) => {
     if (scanned) return;
-
+    setLoading(true);
     setScanned(true);
     try {
       const response = await fetch(`https://world.openfoodfacts.org/api/v0/product/${data}.json`);
       const result = await response.json();
-
+      setLoading(false);
       if (result.status === 1) {
         // Navigate to the product details page and pass the product data
         router.push({
@@ -59,6 +60,7 @@ export default function CameraScanner({ onClose }: CameraProps) {
         setScanned(false);
       }
     } catch (error) {
+      setLoading(false);
       Alert.alert("Error", "Failed to fetch product details.");
       setScanned(false);
     }
@@ -78,11 +80,19 @@ export default function CameraScanner({ onClose }: CameraProps) {
 
   return (
     <View style={styles.cameraContainer}>
-      <CameraView style={styles.camera} facing="back" onBarcodeScanned={scanned ? undefined : handleBarCodeScanned} />
-      {/* <CameraView style={StyleSheet.absoluteFillObject} facing="back" onBarcodeScanned={scanned ? undefined : handleBarCodeScanned} /> */}
+      {loading && (
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color="#0000ff" />
+          <Text>Loading...</Text>
+        </View>
+      )}
+      {!loading && <CameraView style={styles.camera} facing="back" onBarcodeScanned={scanned ? undefined : handleBarCodeScanned} />}
       <Button title="Close Camera" onPress={onClose} />
     </View>
   );
+  {
+    /* <CameraView style={StyleSheet.absoluteFillObject} facing="back" onBarcodeScanned={scanned ? undefined : handleBarCodeScanned} /> */
+  }
 }
 
 const styles = StyleSheet.create({
@@ -122,5 +132,11 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "bold",
     color: "white",
+  },
+  loadingContainer: {
+    ...StyleSheet.absoluteFillObject,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0,0,0,0.5)",
   },
 });
