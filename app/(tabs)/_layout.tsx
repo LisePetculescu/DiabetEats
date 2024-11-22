@@ -1,6 +1,6 @@
 import { Tabs } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
-import AntDesign from "@expo/vector-icons/AntDesign";
+
 
 export default function TabLayout() {
   return (
@@ -8,21 +8,21 @@ export default function TabLayout() {
       screenOptions={{
         tabBarActiveTintColor: "#ffb5b5",
         headerStyle: {
-          backgroundColor: "#407088"
+          backgroundColor: "#407088",
         },
         headerShadowVisible: false,
         headerTintColor: "#ffb5b5",
         // headerTintColor: "#fff",
         tabBarStyle: {
-          backgroundColor: "#407088"
-        }
+          backgroundColor: "#407088",
+        },
       }}
     >
       <Tabs.Screen
         name="index"
         options={{
           title: "",
-          tabBarIcon: ({ color, focused }) => <Ionicons name={focused ? "home-sharp" : "home-outline"} color={color} size={24} />
+          tabBarIcon: ({ color, focused }) => <Ionicons name={focused ? "home-sharp" : "home-outline"} color={color} size={24} />,
         }}
       />
       <Tabs.Screen
@@ -35,9 +35,10 @@ export default function TabLayout() {
           // tabBarIcon: ({ color, focused }) => <Ionicons name={focused ? "information-circle" : "information-circle-outline"} color={color} size={24} />
           // tabBarIcon: ({ color, focused }) => <Ionicons name={focused ? "image" : "image-outline"} color={color} size={24} />
           // tabBarIcon: ({ color, focused }) => <Ionicons name={focused ? "nutrition" : "nutrition-outline"} color={color} size={24} />
-          tabBarIcon: ({ color, focused }) => <Ionicons name={focused ? "person" : "person-outline"} color={color} size={24} />
+          tabBarIcon: ({ color, focused }) => <Ionicons name={focused ? "person" : "person-outline"} color={color} size={24} />,
         }}
       />
+      
     </Tabs>
   );
 }

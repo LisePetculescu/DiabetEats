@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { Camera, CameraType, BarcodeScanningResult } from "expo-camera";
+import { CameraView, Camera, BarcodeScanningResult } from "expo-camera";
 
-import { Button, StyleSheet, Text, TouchableOpacity, View, Alert } from "react-native";
+import { Button, StyleSheet, Text, View, Alert } from "react-native";
 
 interface CameraProps {
   onClose: () => void;
@@ -10,7 +10,7 @@ interface CameraProps {
 
 export default function CameraScanner({ onClose, BarCodeSettings }: CameraProps) {
   // const [facing, setFacing] = useState<CameraType>(CameraType.back);
-  const[facing, setFacing] = useState<"back" | "front">("back");
+  const [facing, setFacing] = useState<"back" | "front">("back");
   const [hasPermission, setHasPermission] = useState<boolean | null>(null);
   const [scanned, setScanned] = useState<boolean>(false);
 
@@ -41,32 +41,24 @@ export default function CameraScanner({ onClose, BarCodeSettings }: CameraProps)
   }
 
   const handleBarCodeScanned = ({ type, data }: BarcodeScanningResult) => {
-    setScanned(true);
-    Alert.alert("Barcode Scanned", `Type: ${type}\nData: ${data}`);
-    // Reset scanned state after a delay
-    setTimeout(() => setScanned(false), 2000);
+    if (!scanned) {
+      setScanned(true);
+      Alert.alert("Barcode Scanned", `Type: ${type}\nData: ${data}`);
+      // Close the camera after a delay
+      setTimeout(() => {
+        setScanned(false);
+        onClose();
+      }, 2000);
+    }
   };
 
-   const toggleCameraFacing = () => {
-     setFacing((current) => (current === "back" ? "front" : "back"));
-   };
+  //    const toggleCameraFacing = () => {
+  //      setFacing((current) => (current === "back" ? "front" : "back"));
+  //    };
 
   return (
     <View style={styles.cameraContainer}>
-      <Camera
-        style={styles.camera}
-        type={facing}
-        onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
-        barCodeScannerSettings={{
-          barCodeTypes: BarCodeSettings,
-        }}
-      >
-        <View style={styles.buttonContainer}>
-          <TouchableOpacity style={styles.button} onPress={toggleCameraFacing}>
-            <Text style={styles.text}>Flip Camera</Text>
-          </TouchableOpacity>
-        </View>
-      </Camera>
+      <CameraView style={StyleSheet.absoluteFillObject} facing="back" onBarcodeScanned={scanned ? undefined : handleBarCodeScanned} />
       <Button title="Close Camera" onPress={onClose} />
     </View>
   );

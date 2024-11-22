@@ -1,7 +1,7 @@
 import { Text, View, StyleSheet } from "react-native";
 import { useState } from "react";
 import Button from "@/components/Button";
-import CameraScanner from "@/components/Camera";
+import CameraScanner from "@/components/Scanner";
 
 export default function Index() {
   const [isCameraVisible, setIsCameraVisible] = useState(false);
