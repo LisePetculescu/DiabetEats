@@ -12,7 +12,7 @@ export default function Index() {
   }
 
   function closeCamera() {
-    // console.log("closeCamera called");
+    console.log("closeCamera called");
     setIsCameraVisible(false);
   }
 

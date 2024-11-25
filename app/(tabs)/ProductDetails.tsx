@@ -38,23 +38,27 @@ export default function ProductDetails() {
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
+    backgroundColor: "#407088",
+    justifyContent: "center",
+    alignItems: "center",
     flexGrow: 1,
-    padding: 20,
+    padding: 20
   },
   image: {
     width: "100%",
     height: 200,
     resizeMode: "contain",
-    marginBottom: 20,
+    marginBottom: 20
   },
   name: {
     fontSize: 24,
     fontWeight: "bold",
-    marginBottom: 10,
+    marginBottom: 10
   },
   title: {
     fontSize: 18,
     fontWeight: "bold",
-    marginBottom: 10,
-  },
+    marginBottom: 10
+  }
 });
