@@ -44,15 +44,16 @@ export default function CameraScanner({ onClose }: CameraProps) {
     if (scanned) return;
     setLoading(true);
     setScanned(true);
+    // data = "5410041001204"; // tuc
     try {
-      const response = await fetch(`https://world.openfoodfacts.org/api/v0/product/${data}.json`);
+      const response = await fetch(`https://world.openfoodfacts.org/api/v0/product/${data}?fields=product_name,nutriscore_data,nutriments,image_url`);
       const result = await response.json();
       setLoading(false);
       if (result.status === 1) {
         // Navigate to the product details page and pass the product data
         router.push({
           pathname: "/ProductDetails",
-          params: { product: JSON.stringify(result.product) },
+          params: { product: JSON.stringify(result.product) }
         });
         onClose();
       } else {
@@ -99,44 +100,44 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: "center",
-    alignItems: "center",
+    alignItems: "center"
   },
   message: {
     textAlign: "center",
-    paddingBottom: 10,
+    paddingBottom: 10
   },
   cameraContainer: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#000",
+    backgroundColor: "#000"
   },
   camera: {
     flex: 1,
     width: 200,
-    height: 100,
+    height: 100
   },
   buttonContainer: {
     flex: 1,
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "transparent",
+    backgroundColor: "transparent"
   },
   button: {
     flex: 0.1,
     alignSelf: "flex-end",
-    alignItems: "center",
+    alignItems: "center"
   },
   text: {
     fontSize: 18,
     fontWeight: "bold",
-    color: "white",
+    color: "white"
   },
   loadingContainer: {
     ...StyleSheet.absoluteFillObject,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "rgba(0,0,0,0.5)",
-  },
+    backgroundColor: "rgba(0,0,0,0.5)"
+  }
 });

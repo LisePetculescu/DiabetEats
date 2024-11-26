@@ -37,27 +37,27 @@ const styles = StyleSheet.create({
     // backgroundColor: "#25292e",
     backgroundColor: "#407088",
     alignItems: "center",
-    justifyContent: "center",
+    justifyContent: "center"
   },
   text: {
-    color: "#fff",
+    color: "#fff"
   },
   textHeader: {
     flex: 1 / 4,
     fontSize: 24,
-    color: "#ffb5b5",
+    color: "#ffb5b5"
   },
   infotext: {
     fontSize: 18,
     color: "#fff",
-    paddingVertical: 10,
+    paddingVertical: 10
   },
   infoContainer: {
     flex: 2 / 4,
-    paddingHorizontal: 30,
+    paddingHorizontal: 30
   },
   footerContainer: {
     flex: 1 / 6,
-    alignItems: "center",
-  },
+    alignItems: "center"
+  }
 });
