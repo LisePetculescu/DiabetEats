@@ -15,13 +15,16 @@ export default function ProductDetails() {
     );
   }
 
+  
+
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <Image source={{ uri: productData.image_url }} style={styles.image} />
       <Text style={[styles.name, styles.text]}>{productData.product_name}</Text>
 
       <Text style={[styles.title, styles.text]}>Næringsindhold:</Text>
-      <Text style={styles.text}>Energi: {productData.nutriments.energy} kcal</Text>
+      <Text style={styles.text}>Energi: {productData.nutriments["energy-kcal"]} kcal</Text>
+      {/* <Text style={styles.text}>Energi: {productData.nutriments.energy} kcal</Text> */}
       <Text style={styles.text}>Fedt: {productData.nutriments.fat}g</Text>
       <Text style={styles.text}>Mættet Fedt: {productData.nutriments["saturated-fat"]}g</Text>
       <Text style={styles.text}>Kulhydrater: {productData.nutriments.carbohydrates}g</Text>
