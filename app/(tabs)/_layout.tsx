@@ -41,7 +41,7 @@ export default function TabLayout() {
         name="ProductDetails"
         options={{
           title: "Produkt info",
-          tabBarIcon: ({ color, focused }) => <Ionicons name={focused ? "home-sharp" : "home-outline"} color={color} size={24} />,
+          tabBarIcon: ({ color, focused }) => <Ionicons name={focused ? "nutrition" : "nutrition-outline"} color={color} size={24} />,
         }}
       />
     </Tabs>

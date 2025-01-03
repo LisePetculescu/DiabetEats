@@ -21,7 +21,8 @@ export default function Index() {
       <Text style={styles.textHeader}>Velkommen til DiabetEats</Text>
       <View style={styles.infoContainer}>
         <Text style={styles.infotext}>Denne app har til formål at du som bruger kan tage et billede af stregkoden på en madvare.</Text>
-        <Text style={styles.infotext}>Så du kan se hvordan denne madvare kan påvirke dig ift. diabetes.</Text>
+        <Text style={styles.infotext}>Så du kan se denne madvares næringsindhold.</Text>
+        <Text style={styles.infotext}>Det er også muligt at gemme madvarer i favoritter så du nemt kan tjekke dem igen.</Text>
       </View>
       <View style={styles.footerContainer}>
         <Button theme="primary" iconName="barcode-scan" iconSet="MaterialCommunityIcons" label="Scan madvare" onPress={useCamera} />
