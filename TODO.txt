@@ -1,0 +1,5 @@
+O   make permission check work
+O   make alert after scan only show up once
+O   Make search for food by name in product details
+O   Make chatGPT api for diabetes answer thingy
+O   Make a fav list that saves to firebase with CRUD
