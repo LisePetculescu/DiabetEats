@@ -85,7 +85,7 @@ export default function ProductDetails() {
           {/* <Button theme="primary" iconName="exit" iconSet="Ionicons" label="" onPress={resetView} /> */}
 
           <Text style={[styles.name, styles.text]}>{productData.product_name}</Text>
-          <Image source={{ uri: imageUrl }} style={styles.image} onError={(error) => console.log("Image loading error:", error.nativeEvent.error)} />
+          <Image source={{ uri: imageUrl }} style={styles.image} onError={(error) => console.error("Image loading error:", error.nativeEvent.error)} />
           {/* <Image source={{ uri: productData.image_url || "https://cdn.creazilla.com/icons/3433516/food-icon-md.png" }} style={styles.image} /> */}
           <Text style={[styles.title, styles.text]}>Næringsindhold (pr. 100g):</Text>
           <Text style={styles.text}>Energi: {productData.nutriments["energy-kcal"]} kcal</Text>

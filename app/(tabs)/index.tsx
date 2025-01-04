@@ -18,7 +18,7 @@ export default function Index() {
 
   function handleScanSuccess() {
     console.log("Item scanned successfully");
-    closeCamera(); // Close the camera when an item is scanned
+    closeCamera();
   }
 
   return (
