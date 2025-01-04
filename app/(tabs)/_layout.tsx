@@ -28,6 +28,7 @@ export default function TabLayout() {
         />
         <Tabs.Screen
           name="myPage"
+          // name="myPage2"
           options={{
             title: "Min Liste",
             // tabBarIcon: ({ color, focused }) => <AntDesign name="bars" size={24} color={color} />
