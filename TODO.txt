@@ -6,5 +6,5 @@ O   Make a fav list that saves to firebase with CRUD
     - read
     - create
     O update
-    O delete
+    - delete
 O make gesture to choose order of food items fav list

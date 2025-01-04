@@ -1,7 +1,8 @@
-import { Text, View, StyleSheet, ScrollView, Image, TouchableOpacity } from "react-native";
+import { Text, View, StyleSheet, ScrollView, Image, Pressable } from "react-native";
 import React, { useEffect, useState } from "react";
-import { FoodType, fetchFood } from "@/app/fetch";
+import { FoodType, fetchFood, deleteFoodItem } from "@/app/fetch";
 import { firestore } from "@/firebaseConfig";
+import { Ionicons } from "@expo/vector-icons";
 
 export default function MyPage() {
   const [food, setFood] = useState<FoodType[]>([]);
@@ -18,7 +19,12 @@ export default function MyPage() {
   const handleFoodClick = (foodItem: FoodType) => {
     setSelectedFood(foodItem);
     console.log(foodItem);
-    
+  };
+
+  // Handle delete food item
+  const handleDeleteFood = (foodItem: FoodType) => {
+    console.log("Delete food item:", foodItem);
+deleteFoodItem(foodItem);
   };
 
   return (
@@ -30,9 +36,14 @@ export default function MyPage() {
             <Text style={styles.outerTitle}>Gemte madvarer</Text>
             <View style={styles.outerContainer}>
               {food.map((item) => (
-                <TouchableOpacity key={item.id} onPress={() => handleFoodClick(item)} style={styles.foodItem}>
-                  <Text style={styles.textBlack}>{item.name}</Text>
-                </TouchableOpacity>
+                <Pressable key={item.id} onPress={() => handleFoodClick(item)} style={styles.foodItem}>
+                  <View style={styles.foodItemRow}>
+                    <Text style={styles.textBlack}>{item.name}</Text>
+                    <Pressable onPress={() => handleDeleteFood(item)}>
+                      <Ionicons name="trash" size={24} color="white" />
+                    </Pressable>
+                  </View>
+                </Pressable>
               ))}
             </View>
           </View>
@@ -57,9 +68,9 @@ export default function MyPage() {
             <Text style={[styles.title, styles.textWhite]}>Ingredienser:</Text>
             {selectedFood.ingredients ? <Text style={styles.textWhite}>{selectedFood.ingredients}</Text> : <Text style={styles.textWhite}>Ingredienser er ikke tilgængelige for denne madvare.</Text>}
             {/* Button to go back to the list */}
-            <TouchableOpacity onPress={() => setSelectedFood(null)} style={styles.backButton}>
+            <Pressable onPress={() => setSelectedFood(null)} style={styles.backButton}>
               <Text style={styles.textWhite}>Tilbage til listen</Text>
-            </TouchableOpacity>
+            </Pressable>
           </View>
         )}
       </ScrollView>
@@ -77,7 +88,7 @@ const styles = StyleSheet.create({
   outerContainer: {
     flex: 1,
     backgroundColor: "#407088",
-    padding: 20,
+    padding: 10,
   },
   scrollContainer: {
     flexGrow: 1,
@@ -132,6 +143,11 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
     // Shadow for Android
     elevation: 5,
+  },
+  foodItemRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
   },
   backButton: {
     marginTop: 20,

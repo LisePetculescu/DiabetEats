@@ -1,8 +1,15 @@
 import { Alert } from "react-native";
 import { useState } from "react";
-import { addDoc, collection, getDocs, onSnapshot, Firestore } from "firebase/firestore";
+import { addDoc, collection, onSnapshot, Firestore, deleteDoc, doc, writeBatch } from "firebase/firestore";
 import { firestore, storage } from "../firebaseConfig.js";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { ref, uploadBytes, getDownloadURL, deleteObject } from "firebase/storage";
+
+
+export default {
+  fetchFood,
+  saveFood,
+  deleteFoodItem,
+};
 
 export interface FoodType {
   id?: string | undefined;
@@ -108,13 +115,41 @@ export function fetchFood(firestore: Firestore, callback: (foods: FoodType[]) =>
   return unsubscribe;
 }
 
+// Not really anything to update here.. 
 // UPDATE
-export async function updateFoodlist() {}
+export async function updateFoodOrder(foodItems: FoodType[]) {}
 
 // DELETE
 export async function deleteFoodItem(itemToDelete: FoodType) {
-  if (itemToDelete) {
+  try {
+    // Delete the image from Firebase Storage
     if (itemToDelete.imageUri) {
+      const imageRef = ref(storage, itemToDelete.imageUri);
+      try {
+        await deleteObject(imageRef);
+        console.log("Image deleted successfully");
+      } catch (error: any) {
+        if (error.code === "storage/object-not-found") {
+          console.warn("Image not found, proceeding with deletion of the document");
+        } else {
+          throw error;
+        }
+      }
+    } else {
+      console.error("image not deleted");
+      
     }
+
+    // Ensure itemToDelete.id is defined
+    if (!itemToDelete.id) {
+      throw new Error("Item ID is not defined");
+    }
+
+    // Delete the document from Firestore
+    const docRef = doc(firestore, "foodList", itemToDelete.id);
+    await deleteDoc(docRef);
+    console.log("Food item deleted successfully");
+  } catch (error) {
+    console.error("Error deleting food item: ", error);
   }
 }
