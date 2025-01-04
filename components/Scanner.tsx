@@ -6,9 +6,11 @@ import { Button, StyleSheet, Text, View, Alert, ActivityIndicator } from "react-
 
 interface CameraProps {
   onClose: () => void;
+  // onScanSuccess: () => void;
   //   BarCodeSettings?: string[];
 }
 
+// export default function CameraScanner({ onClose, onScanSuccess }: CameraProps) {
 export default function CameraScanner({ onClose }: CameraProps) {
   const [hasPermission, setHasPermission] = useState<boolean | null>(null);
   const [scanned, setScanned] = useState<boolean>(false);
@@ -44,6 +46,8 @@ export default function CameraScanner({ onClose }: CameraProps) {
     if (scanned) return;
     setLoading(true);
     setScanned(true);
+      console.log(`Bar code with type ${type} and data ${data} has been scanned!`);
+      // onScanSuccess(); 
     // data = "5410041001204"; // tuc
     try {
       const response = await fetch(`https://world.openfoodfacts.org/api/v0/product/${data}?fields=product_name,nutriscore_data,nutriments,image_url`);

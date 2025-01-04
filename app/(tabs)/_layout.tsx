@@ -27,7 +27,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="myPage"
         options={{
-          title: "Min Side",
+          title: "Min Liste",
           // tabBarIcon: ({ color, focused }) => <AntDesign name="bars" size={24} color={color} />
           // tabBarIcon: ({ color, focused }) => <Ionicons name={focused ? "heart-circle" : "heart-circle-outline"} color={color} size={24} />
           // tabBarIcon: ({ color, focused }) => <Ionicons name={focused ? "heart-dislike-circle" : "heart-dislike-circle-outline"} color={color} size={24} />

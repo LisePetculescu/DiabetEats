@@ -1,5 +1,10 @@
 O   make permission check work
 O   make alert after scan only show up once
-O   Make search for food by name in product details
-O   Make chatGPT api for diabetes answer thingy
+-   make feedback on success save food
+-   add placeholder image for food with no image in detailview
 O   Make a fav list that saves to firebase with CRUD
+    - read
+    - create
+    O update
+    O delete
+O make gesture to choose order of food items fav list

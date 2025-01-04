@@ -2,20 +2,22 @@ import { View, StyleSheet, Pressable, Text } from "react-native";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { Ionicons } from "@expo/vector-icons";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
+import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 
 type IoniconsName = keyof typeof Ionicons.glyphMap;
 type MaterialCommunityIconsName = keyof typeof MaterialCommunityIcons.glyphMap;
+type MaterialIconsName = keyof typeof MaterialIcons.glyphMap;
 
 interface Props {
   label: string;
   theme: "primary" | "secondary";
   onPress: () => void;
-  iconName?: IoniconsName | MaterialCommunityIconsName | string;
-  iconSet?: "Ionicons" | "MaterialCommunityIcons";
+  iconName?: IoniconsName | MaterialCommunityIconsName | MaterialIconsName | string;
+  iconSet?: "Ionicons" | "MaterialCommunityIcons" | "MaterialIcons";
 }
 
 export default function Button({ label, theme, onPress, iconName, iconSet = "Ionicons" }: Props) {
-  const IconComponent = iconSet === "Ionicons" ? Ionicons : MaterialCommunityIcons;
+   const IconComponent = iconSet === "Ionicons" ? Ionicons : iconSet === "MaterialCommunityIcons" ? MaterialCommunityIcons : MaterialIcons;
 
   if (theme === "primary") {
     return (
@@ -47,6 +49,7 @@ const styles = StyleSheet.create({
     width: 320,
     height: 68,
     marginHorizontal: 20,
+    marginBottom: 10,
     alignItems: "center",
     justifyContent: "center",
     padding: 3,
