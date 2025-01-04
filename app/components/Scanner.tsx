@@ -13,8 +13,8 @@ interface CameraProps {
 // export default function CameraScanner({ onClose, onScanSuccess }: CameraProps) {
 export default function CameraScanner({ onClose }: CameraProps) {
   const [hasPermission, setHasPermission] = useState<boolean | null>(null);
-  const [scanned, setScanned] = useState<boolean>(false);
-  const [loading, setLoading] = useState<boolean>(false);
+  const [scanned, setScanned] = useState(false);
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -24,8 +24,30 @@ export default function CameraScanner({ onClose }: CameraProps) {
     })();
   }, []);
 
+  const handleGrantPermission = async () => {
+    const { status } = await Camera.requestCameraPermissionsAsync();
+    if (status === "granted") {
+      setHasPermission(true);
+    } else {
+      Alert.alert("Permission Denied", "Camera access is required to scan barcodes. Please enable camera permissions in your device settings.");
+    }
+  };
+
   if (hasPermission === null) {
-    return <Text>Requesting camera permissions...</Text>;
+    return (
+      <View style={styles.container}>
+        <Text>Requesting camera permissions...</Text>
+      </View>
+    );
+  }
+
+  if (hasPermission === false) {
+    return (
+      <View style={styles.container}>
+        <Text>No access to the camera. Please grant permission to use the camera.</Text>
+        <Button title="Grant Permission" onPress={handleGrantPermission} />
+      </View>
+    );
   }
 
   if (!hasPermission) {
@@ -42,12 +64,13 @@ export default function CameraScanner({ onClose }: CameraProps) {
       </View>
     );
   }
+
   const handleBarCodeScanned = async ({ type, data }: BarcodeScanningResult) => {
     if (scanned) return;
     setLoading(true);
     setScanned(true);
-      console.log(`Bar code with type ${type} and data ${data} has been scanned!`);
-      // onScanSuccess(); 
+    console.log(`Bar code with type ${type} and data ${data} has been scanned!`);
+    // onScanSuccess();
     // data = "5410041001204"; // tuc
     try {
       const response = await fetch(`https://world.openfoodfacts.org/api/v0/product/${data}?fields=product_name,nutriscore_data,nutriments,image_url`);
@@ -57,7 +80,7 @@ export default function CameraScanner({ onClose }: CameraProps) {
         // Navigate to the product details page and pass the product data
         router.push({
           pathname: "/ProductDetails",
-          params: { product: JSON.stringify(result.product) }
+          params: { product: JSON.stringify(result.product) },
         });
         onClose();
       } else {
@@ -104,44 +127,44 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: "center",
-    alignItems: "center"
+    alignItems: "center",
   },
   message: {
     textAlign: "center",
-    paddingBottom: 10
+    paddingBottom: 10,
   },
   cameraContainer: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#000"
+    backgroundColor: "#000",
   },
   camera: {
     flex: 1,
     width: 200,
-    height: 100
+    height: 100,
   },
   buttonContainer: {
     flex: 1,
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "transparent"
+    backgroundColor: "transparent",
   },
   button: {
     flex: 0.1,
     alignSelf: "flex-end",
-    alignItems: "center"
+    alignItems: "center",
   },
   text: {
     fontSize: 18,
     fontWeight: "bold",
-    color: "white"
+    color: "white",
   },
   loadingContainer: {
     ...StyleSheet.absoluteFillObject,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "rgba(0,0,0,0.5)"
-  }
+    backgroundColor: "rgba(0,0,0,0.5)",
+  },
 });

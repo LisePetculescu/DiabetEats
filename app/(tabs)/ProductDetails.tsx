@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, ScrollView, StyleSheet, Image } from "react-native";
 import { useLocalSearchParams } from "expo-router";
-import { saveFood } from "@/fetch";
-import Button from "@/components/Button";
+import { saveFood } from "@/app/fetch";
+import Button from "@/app/components/Button";
 import Toast from "react-native-toast-message";
 
 export default function ProductDetails() {
@@ -11,7 +11,6 @@ export default function ProductDetails() {
   const initialProductData = productString ? JSON.parse(productString) : null;
   const [productData, setProductData] = useState(initialProductData);
   const [showProduct, setShowProduct] = useState(false);
-
 
   useEffect(() => {
     if (productString) {
@@ -42,6 +41,7 @@ export default function ProductDetails() {
         text1: "Success",
         text2: "Food item saved successfully!",
       });
+      setShowProduct(false);
     } catch (error) {
       Toast.show({
         type: "error",
@@ -82,7 +82,7 @@ export default function ProductDetails() {
           {/* <Button theme="primary" iconName="save" iconSet="Ionicons" label="Gem madvare" onPress={addFood} /> */}
           {/* <Button theme="primary" iconName="nutrition" iconSet="Ionicons" label="Gem madvare" onPress={addFood} /> */}
           <Button theme="primary" iconName="playlist-add" iconSet="MaterialIcons" label="Gem madvare" onPress={addFood} />
-          <Button theme="primary" iconName="exit" iconSet="Ionicons" label="" onPress={resetView} />
+          {/* <Button theme="primary" iconName="exit" iconSet="Ionicons" label="" onPress={resetView} /> */}
 
           <Text style={[styles.name, styles.text]}>{productData.product_name}</Text>
           <Image source={{ uri: imageUrl }} style={styles.image} onError={(error) => console.log("Image loading error:", error.nativeEvent.error)} />
@@ -108,7 +108,7 @@ export default function ProductDetails() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    
+
     backgroundColor: "#407088",
     justifyContent: "center",
     alignItems: "center",

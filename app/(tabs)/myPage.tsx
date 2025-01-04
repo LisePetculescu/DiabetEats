@@ -1,13 +1,11 @@
 import { Text, View, StyleSheet, ScrollView, Image, TouchableOpacity } from "react-native";
 import React, { useEffect, useState } from "react";
-import { FoodType, fetchFood } from "@/fetch";
+import { FoodType, fetchFood } from "@/app/fetch";
 import { firestore } from "@/firebaseConfig";
-
 
 export default function MyPage() {
   const [food, setFood] = useState<FoodType[]>([]);
   const [selectedFood, setSelectedFood] = useState<FoodType | null>(null);
-
 
   useEffect(() => {
     const unsubscribe = fetchFood(firestore, setFood);
@@ -19,23 +17,25 @@ export default function MyPage() {
   // Handle food name click
   const handleFoodClick = (foodItem: FoodType) => {
     setSelectedFood(foodItem);
+    console.log(foodItem);
+    
   };
 
   return (
     <View style={styles.outerContainer}>
-
-      <ScrollView contentContainerStyle={styles.outerContainer}>
+      <ScrollView contentContainerStyle={styles.scrollContainer}>
         {/* Show food names */}
         {!selectedFood ? (
-          <>
-          <Text style={styles.name}>Her kan du se de madvarer du har gemt</Text>
-         { food.map((item) => (
-            <TouchableOpacity key={item.id} onPress={() => handleFoodClick(item)} style={styles.foodItem}>
-              <Text style={styles.textBlack}>{item.name}</Text>
-            </TouchableOpacity>
-          ))}
-          </>
-          
+          <View style={styles.titleContainer}>
+            <Text style={styles.outerTitle}>Gemte madvarer</Text>
+            <View style={styles.outerContainer}>
+              {food.map((item) => (
+                <TouchableOpacity key={item.id} onPress={() => handleFoodClick(item)} style={styles.foodItem}>
+                  <Text style={styles.textBlack}>{item.name}</Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+          </View>
         ) : (
           // Show details of the selected food
           <View key={selectedFood.id} style={styles.container}>
@@ -46,7 +46,6 @@ export default function MyPage() {
               }}
               style={styles.image}
             />
-
             <Text style={[styles.title, styles.textWhite]}>Næringsindhold (pr. 100g):</Text>
             <Text style={styles.textWhite}>Energi: {selectedFood.nutrients.energy} kcal</Text>
             <Text style={styles.textWhite}>Fedt: {selectedFood.nutrients.fat}g</Text>
@@ -55,10 +54,8 @@ export default function MyPage() {
             <Text style={styles.textWhite}>Heraf Sukker: {selectedFood.nutrients.sugars}g</Text>
             <Text style={styles.textWhite}>Protein: {selectedFood.nutrients.protein}g</Text>
             <Text style={styles.textWhite}>OBS: Tallene kan være forkerte/forældede</Text>
-
             <Text style={[styles.title, styles.textWhite]}>Ingredienser:</Text>
             {selectedFood.ingredients ? <Text style={styles.textWhite}>{selectedFood.ingredients}</Text> : <Text style={styles.textWhite}>Ingredienser er ikke tilgængelige for denne madvare.</Text>}
-
             {/* Button to go back to the list */}
             <TouchableOpacity onPress={() => setSelectedFood(null)} style={styles.backButton}>
               <Text style={styles.textWhite}>Tilbage til listen</Text>
@@ -71,35 +68,36 @@ export default function MyPage() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#407088",
-
-    justifyContent: "center",
-    alignItems: "center",
-    flexGrow: 1,
-    padding: 10,
+  outerTitle: {
+    fontSize: 24,
+    fontWeight: "bold",
+    marginBottom: 10,
+    // alignSelf: "center"
   },
   outerContainer: {
     flex: 1,
     backgroundColor: "#407088",
-    // justifyContent: "center",
-    // alignItems: "center",
+    padding: 20,
+  },
+  scrollContainer: {
     flexGrow: 1,
-    padding: 10,
+    justifyContent: "center",
+    alignItems: "center",
   },
-  textWhite: {
-    color: "#fff",
+  titleContainer: {
+    flex: 1,
+    backgroundColor: "#407088",
   },
-  textBlack: {
-    color: "#000",
-    fontWeight: "bold",
+  container: {
+    flex: 1,
+    padding: 20,
   },
   image: {
     width: 200,
     height: 200,
     resizeMode: "contain",
     marginBottom: 20,
+    alignSelf: "center",
   },
   name: {
     fontSize: 24,
@@ -111,20 +109,35 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginBottom: 10,
   },
+  textBlack: {
+    color: "black",
+  },
+  textWhite: {
+    color: "#fff",
+  },
   foodItem: {
-    // borderTopWidth: 1,
     borderWidth: 2,
     borderRadius: 10,
     borderColor: "#000",
-    // borderColor: "#fff",
     padding: 10,
     marginBottom: 10,
     backgroundColor: "#ffb5b5",
+    // Shadow for iOS
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    // Shadow for Android
+    elevation: 5,
   },
   backButton: {
     marginTop: 20,
     padding: 10,
     backgroundColor: "#3d5a80",
     borderRadius: 5,
+    alignItems: "center",
   },
 });

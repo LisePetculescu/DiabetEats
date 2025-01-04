@@ -7,5 +7,5 @@
       "@/*": ["./*"]
     }
   },
-  "include": ["**/*.ts", "**/*.tsx", ".expo/types/**/*.ts", "expo-env.d.ts", "fetch.ts", "components/ToastConfig.jsx"]
+  "include": ["**/*.ts", "**/*.tsx", ".expo/types/**/*.ts", "expo-env.d.ts", "app/fetch.ts", "app/components/ToastConfig.jsx"]
 }

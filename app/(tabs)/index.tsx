@@ -1,7 +1,7 @@
 import { Text, View, StyleSheet } from "react-native";
 import { useState } from "react";
-import Button from "@/components/Button";
-import CameraScanner from "@/components/Scanner";
+import Button from "@/app/components/Button";
+import CameraScanner from "@/app/components/Scanner";
 
 export default function Index() {
   const [isCameraVisible, setIsCameraVisible] = useState(false);
@@ -16,10 +16,10 @@ export default function Index() {
     setIsCameraVisible(false);
   }
 
-    function handleScanSuccess() {
-      console.log("Item scanned successfully");
-      closeCamera(); // Close the camera when an item is scanned
-    }
+  function handleScanSuccess() {
+    console.log("Item scanned successfully");
+    closeCamera(); // Close the camera when an item is scanned
+  }
 
   return (
     <View style={styles.container}>
@@ -44,27 +44,27 @@ const styles = StyleSheet.create({
     // backgroundColor: "#25292e",
     backgroundColor: "#407088",
     alignItems: "center",
-    justifyContent: "center"
+    justifyContent: "center",
   },
   text: {
-    color: "#fff"
+    color: "#fff",
   },
   textHeader: {
     flex: 1 / 4,
     fontSize: 24,
-    color: "#ffb5b5"
+    color: "#ffb5b5",
   },
   infotext: {
     fontSize: 18,
     color: "#fff",
-    paddingVertical: 10
+    paddingVertical: 10,
   },
   infoContainer: {
     flex: 2 / 4,
-    paddingHorizontal: 30
+    paddingHorizontal: 30,
   },
   footerContainer: {
     flex: 1 / 6,
-    alignItems: "center"
-  }
+    alignItems: "center",
+  },
 });

@@ -1,4 +1,4 @@
-O   make permission check work
+-   make permission check work
 O   make alert after scan only show up once
 -   make feedback on success save food
 -   add placeholder image for food with no image in detailview
