@@ -1,5 +1,4 @@
-import { Alert } from "react-native";
-import { useState } from "react";
+
 import { addDoc, collection, onSnapshot, Firestore, deleteDoc, doc, writeBatch } from "firebase/firestore";
 import { firestore, storage } from "../firebaseConfig.js";
 import { ref, uploadBytes, getDownloadURL, deleteObject } from "firebase/storage";
@@ -65,7 +64,7 @@ export async function saveFood(newFood: FoodType) {
         ingredients: newFood.ingredients || "",
       };
 
-      console.log("Food data being saved: ", foodData);
+      // console.log("Food data being saved: ", foodData);
 
       const docRef = await addDoc(collection(firestore, "foodList"), foodData);
       console.log("food item id: ", docRef);
@@ -103,7 +102,7 @@ export function fetchFood(firestore: Firestore, callback: (foods: FoodType[]) =>
           ingredients: foodData.ingredients || "No ingredients listed",
         };
       });
-      console.log("Raw Firestore Data:", fetchedFoods);
+      // console.log("Raw Firestore Data:", fetchedFoods);
 
       callback(fetchedFoods);
     },

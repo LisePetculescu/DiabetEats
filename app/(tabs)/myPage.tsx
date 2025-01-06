@@ -1,4 +1,4 @@
-import { Text, View, StyleSheet, ScrollView, Image, Pressable } from "react-native";
+import { Text, View, StyleSheet, ScrollView, Image, Pressable, Alert } from "react-native";
 import React, { useEffect, useState } from "react";
 import { FoodType, fetchFood, deleteFoodItem } from "@/app/fetch";
 import { firestore } from "@/firebaseConfig";
@@ -18,13 +18,30 @@ export default function MyPage() {
   // Handle food name click
   const handleFoodClick = (foodItem: FoodType) => {
     setSelectedFood(foodItem);
-    console.log(foodItem);
+    // console.log(foodItem);
   };
 
   // Handle delete food item
   const handleDeleteFood = (foodItem: FoodType) => {
-    console.log("Delete food item:", foodItem);
-deleteFoodItem(foodItem);
+    Alert.alert(
+      foodItem.name,
+      "Er du sikker på du vil slette denne madvare??",
+      [
+        {
+          text: "Annullér",
+          style: "cancel",
+        },
+        {
+          text: "Slet",
+          style: "destructive",
+          onPress: () => {
+            console.log("Delete food item:", foodItem);
+            deleteFoodItem(foodItem);
+          },
+        },
+      ],
+      { cancelable: true }
+    );
   };
 
   return (
