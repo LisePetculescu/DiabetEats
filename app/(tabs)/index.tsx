@@ -16,11 +16,6 @@ export default function Index() {
     setIsCameraVisible(false);
   }
 
-  function handleScanSuccess() {
-    console.log("Item scanned successfully");
-    closeCamera();
-  }
-
   return (
     <View style={styles.container}>
       <Text style={styles.textHeader}>Velkommen til DiabetEats</Text>
@@ -32,7 +27,6 @@ export default function Index() {
       <View style={styles.footerContainer}>
         <Button theme="primary" iconName="barcode-scan" iconSet="MaterialCommunityIcons" label="Scan madvare" onPress={useCamera} />
       </View>
-      {/* {isCameraVisible && <CameraScanner onClose={closeCamera} onScanSuccess={handleScanSuccess} />} */}
       {isCameraVisible && <CameraScanner onClose={closeCamera} />}
     </View>
   );
@@ -41,7 +35,6 @@ export default function Index() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // backgroundColor: "#25292e",
     backgroundColor: "#407088",
     alignItems: "center",
     justifyContent: "center",

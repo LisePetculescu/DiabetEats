@@ -51,21 +51,6 @@ export default function ProductDetails() {
     }
   }
 
-  function resetView() {
-    // Reset state to ensure the product data is cleared.
-
-    // setProductData(null);
-    setShowProduct(false);
-    console.log("View reset");
-  }
-
-  // if (!productData) {
-  //   return (
-  //     <View style={styles.container}>
-  //       <Text style={styles.text}>Her er ingen produktdetaljer. Scan en barcode.</Text>
-  //     </View>
-  //   );
-  // }
   if (!showProduct) {
     return (
       <View style={styles.container}>
@@ -79,14 +64,9 @@ export default function ProductDetails() {
     return (
       <ScrollView contentContainerStyle={styles.container}>
         <View style={styles.container}>
-          {/* <Button theme="primary" iconName="save" iconSet="Ionicons" label="Gem madvare" onPress={addFood} /> */}
-          {/* <Button theme="primary" iconName="nutrition" iconSet="Ionicons" label="Gem madvare" onPress={addFood} /> */}
           <Button theme="primary" iconName="playlist-add" iconSet="MaterialIcons" label="Gem madvare" onPress={addFood} />
-          {/* <Button theme="primary" iconName="exit" iconSet="Ionicons" label="" onPress={resetView} /> */}
-
           <Text style={[styles.name, styles.text]}>{productData.product_name}</Text>
           <Image source={{ uri: imageUrl }} style={styles.image} onError={(error) => console.error("Image loading error:", error.nativeEvent.error)} />
-          {/* <Image source={{ uri: productData.image_url || "https://cdn.creazilla.com/icons/3433516/food-icon-md.png" }} style={styles.image} /> */}
           <Text style={[styles.title, styles.text]}>Næringsindhold (pr. 100g):</Text>
           <Text style={styles.text}>Energi: {productData.nutriments["energy-kcal"]} kcal</Text>
           <Text style={styles.text}>Fedt: {productData.nutriments.fat}g</Text>

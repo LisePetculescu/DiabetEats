@@ -6,11 +6,8 @@ import { Button, StyleSheet, Text, View, Alert, ActivityIndicator } from "react-
 
 interface CameraProps {
   onClose: () => void;
-  // onScanSuccess: () => void;
-  //   BarCodeSettings?: string[];
 }
 
-// export default function CameraScanner({ onClose, onScanSuccess }: CameraProps) {
 export default function CameraScanner({ onClose }: CameraProps) {
   const [hasPermission, setHasPermission] = useState<boolean | null>(null);
   const [scanned, setScanned] = useState(false);
@@ -70,7 +67,7 @@ export default function CameraScanner({ onClose }: CameraProps) {
     setLoading(true);
     setScanned(true);
     console.log(`Bar code with type ${type} and data ${data} has been scanned!`);
-    // onScanSuccess();
+
     // data = "5410041001204"; // tuc
     try {
       const response = await fetch(`https://world.openfoodfacts.org/api/v0/product/${data}?fields=product_name,nutriscore_data,nutriments,image_url`);
@@ -94,18 +91,6 @@ export default function CameraScanner({ onClose }: CameraProps) {
     }
   };
 
-  //   const handleBarCodeScanned = ({ type, data }: BarcodeScanningResult) => {
-  //     if (!scanned) {
-  //       setScanned(true);
-  //       Alert.alert("Barcode Scanned", `Type: ${type}\nData: ${data}`);
-  //       // Close the camera after a delay
-  //       setTimeout(() => {
-  //         setScanned(false);
-  //         onClose();
-  //       }, 2000);
-  //     }
-  //   };
-
   return (
     <View style={styles.cameraContainer}>
       {loading && (
@@ -118,9 +103,6 @@ export default function CameraScanner({ onClose }: CameraProps) {
       <Button title="Close Camera" onPress={onClose} />
     </View>
   );
-  {
-    /* <CameraView style={StyleSheet.absoluteFillObject} facing="back" onBarcodeScanned={scanned ? undefined : handleBarCodeScanned} /> */
-  }
 }
 
 const styles = StyleSheet.create({

@@ -3,20 +3,11 @@ import React, { useEffect, useState } from "react";
 import { FoodType, fetchFood, deleteFoodItem } from "@/app/fetch";
 import { firestore } from "@/firebaseConfig";
 import { Ionicons } from "@expo/vector-icons";
-import { login, auth, app } from "@/firebaseConfig";
+import { login, auth } from "@/firebaseConfig";
 import { onAuthStateChanged, getAuth, signOut, createUserWithEmailAndPassword, } from "firebase/auth";
-// import {  initializeAuth, getReactNativePersistence} from "firebase/auth";
-// import AsyncStorage from "@react-native-async-storage/async-storage";
 
-// web or device
-// let auth: any;
-// if (Platform.OS === "web") {
-//   auth = getAuth(app);
-// } else {
-//   auth = initializeAuth(app, {
-//     persistence: getReactNativePersistence(AsyncStorage),
-//   });
-// }
+
+
 
 export default function MyPage() {
   const [food, setFood] = useState<FoodType[]>([]);
@@ -184,9 +175,6 @@ export default function MyPage() {
               <Pressable style={styles.backButton} onPress={() => setSelectedFood(null)}>
                 <Text style={styles.textWhiteBold}>Tilbage til listen</Text>
               </Pressable>
-              {/* <Pressable onPress={() => setSelectedFood(null)} style={styles.backButton}>
-                <Text style={styles.textWhite}>Tilbage til listen</Text>
-              </Pressable> */}
             </View>
           )}
         </ScrollView>

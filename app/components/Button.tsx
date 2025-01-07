@@ -17,19 +17,13 @@ interface Props {
 }
 
 export default function Button({ label, theme, onPress, iconName, iconSet = "Ionicons" }: Props) {
-   const IconComponent = iconSet === "Ionicons" ? Ionicons : iconSet === "MaterialCommunityIcons" ? MaterialCommunityIcons : MaterialIcons;
+  const IconComponent = iconSet === "Ionicons" ? Ionicons : iconSet === "MaterialCommunityIcons" ? MaterialCommunityIcons : MaterialIcons;
 
   if (theme === "primary") {
     return (
       <View style={[styles.buttonContainer, { borderWidth: 4, borderColor: "#ffcbcb", borderRadius: 18 }]}>
         <Pressable style={[styles.button, { backgroundColor: "#132743" }]} onPress={onPress}>
-         
-
-          {/* {iconName && <MaterialCommunityIcons name={iconName} size={24} color="#ffcbcb" style={styles.buttonIcon} />} */}
-          {/* {iconName && <MaterialCommunityIcons name="barcode-scan" size={24} color="#ffcbcb" style={styles.buttonIcon} />} */}
           {iconName && <IconComponent name={iconName as any} size={24} color="#ffcbcb" style={styles.buttonIcon} />}
-
-      
           <Text style={[styles.buttonLabel, { color: "#ffcbcb" }]}>{label}</Text>
         </Pressable>
       </View>
