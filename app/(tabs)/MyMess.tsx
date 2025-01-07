@@ -5,6 +5,8 @@ import { firestore } from "@/firebaseConfig";
 import { Ionicons } from "@expo/vector-icons";
 import { login, auth, app } from "@/firebaseConfig";
 import { onAuthStateChanged, getAuth, signOut, createUserWithEmailAndPassword } from "firebase/auth";
+import Animated, { useSharedValue, useAnimatedStyle, withSpring } from "react-native-reanimated";
+import { GestureDetector, Gesture, GestureHandlerRootView } from "react-native-gesture-handler";
 // import {  initializeAuth, getReactNativePersistence} from "firebase/auth";
 // import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -18,7 +20,7 @@ import { onAuthStateChanged, getAuth, signOut, createUserWithEmailAndPassword } 
 //   });
 // }
 
-export default function MyPage() {
+export default function MyMess() {
   const [food, setFood] = useState<FoodType[]>([]);
   const [selectedFood, setSelectedFood] = useState<FoodType | null>(null);
 
@@ -27,6 +29,8 @@ export default function MyPage() {
   const [enteredEmail, setEnteredEmail] = useState("lise@email.test");
   const [enteredPassword, setEnteredPassword] = useState("test1234");
   const [userId, setUserId] = useState<string | null>(null);
+  const translateX = useSharedValue(0);
+  const translateY = useSharedValue(0);
 
   useEffect(() => {
     const unsubscribe = fetchFood(firestore, setFood);
@@ -106,6 +110,30 @@ export default function MyPage() {
     );
   };
 
+  function onGestureEvent(event: any) {
+    const { translationX, translationY } = event.nativeEvent;
+    console.log("X: ", translationX);
+    console.log("Y: ", translationY);
+  }
+
+  const panGesture = Gesture.Pan()
+    .onUpdate((event) => {
+      "worklet";
+      translateX.value = event.translationX;
+      translateY.value = event.translationY;
+    })
+    .onEnd(() => {
+      "worklet";
+      translateX.value = withSpring(0);
+      translateY.value = withSpring(0);
+    });
+
+  const animatedStyle = useAnimatedStyle(() => {
+    return {
+      transform: [{ translateX: translateX.value }, { translateY: translateY.value }],
+    };
+  });
+
   if (!loggedIn) {
     return (
       <View style={[styles.container, styles.outerContainer, styles.loginSignup]}>
@@ -133,63 +161,73 @@ export default function MyPage() {
 
   if (userId) {
     return (
-      <View style={styles.outerContainer}>
-        <View style={styles.foodItemRow}>
-          <Text style={styles.title}>User: {enteredEmail}</Text>
-          <Pressable style={styles.backButton} onPress={handleSignOut}>
-            <Text style={styles.textWhiteBold}>Logud</Text>
-          </Pressable>
-          {/* <Button style={styles.backButton} title="Log ud" onPress={handleSignOut} /> */}
-        </View>
-        <ScrollView contentContainerStyle={styles.scrollContainer}>
-          {/* Show food names */}
-          {!selectedFood ? (
-            <View style={styles.titleContainer}>
-              <Text style={styles.outerTitle}>Gemte madvarer</Text>
-              <View style={styles.outerContainer}>
-                {food.map((item) => (
-                  <Pressable key={item.id} onPress={() => handleFoodClick(item)} style={styles.foodItem}>
-                    <View style={styles.foodItemRow}>
-                      <Text style={styles.textBlack}>{item.name}</Text>
-                      <Pressable onPress={() => handleDeleteFood(item)}>
-                        <Ionicons name="trash" size={24} color="white" />
-                      </Pressable>
+      <GestureHandlerRootView style={styles.rootView}>
+        <View style={styles.outerContainer}>
+          <View style={styles.foodItemRow}>
+            <Text style={styles.title}>User: {enteredEmail}</Text>
+            <Pressable style={styles.backButton} onPress={handleSignOut}>
+              <Text style={styles.textWhiteBold}>Logud</Text>
+            </Pressable>
+            {/* <Button style={styles.backButton} title="Log ud" onPress={handleSignOut} /> */}
+          </View>
+          <ScrollView contentContainerStyle={styles.scrollContainer}>
+            <GestureDetector gesture={panGesture}>
+              <Animated.View style={[ animatedStyle]}>
+                {/* Show food names */}
+                {!selectedFood ? (
+                  <View style={styles.titleContainer}>
+                    <Text style={styles.outerTitle}>Gemte madvarer</Text>
+                    <View style={styles.outerContainer}>
+                      {food.map((item) => (
+                        <Pressable key={item.id} onPress={() => handleFoodClick(item)} style={styles.foodItem}>
+                          <View style={styles.foodItemRow}>
+                            <Text style={styles.textBlack}>{item.name}</Text>
+                            <Pressable onPress={() => handleDeleteFood(item)}>
+                              <Ionicons name="trash" size={24} color="white" />
+                            </Pressable>
+                          </View>
+                        </Pressable>
+                      ))}
                     </View>
-                  </Pressable>
-                ))}
-              </View>
-            </View>
-          ) : (
-            // Show details of the selected food
-            <View key={selectedFood.id} style={styles.container}>
-              <Text style={[styles.name, styles.textWhite]}>{selectedFood.name}</Text>
-              <Image
-                source={{
-                  uri: selectedFood.imageUri || "https://cdn.creazilla.com/icons/3433516/food-icon-md.png",
-                }}
-                style={styles.image}
-              />
-              <Text style={[styles.title, styles.textWhite]}>Næringsindhold (pr. 100g):</Text>
-              <Text style={styles.textWhite}>Energi: {selectedFood.nutrients.energy} kcal</Text>
-              <Text style={styles.textWhite}>Fedt: {selectedFood.nutrients.fat}g</Text>
-              <Text style={styles.textWhite}>Mættet Fedt: {selectedFood.nutrients.saturatedFat}g</Text>
-              <Text style={styles.textWhite}>Kulhydrater: {selectedFood.nutrients.carbs}g</Text>
-              <Text style={styles.textWhite}>Heraf Sukker: {selectedFood.nutrients.sugars}g</Text>
-              <Text style={styles.textWhite}>Protein: {selectedFood.nutrients.protein}g</Text>
-              <Text style={styles.textWhite}>OBS: Tallene kan være forkerte/forældede</Text>
-              <Text style={[styles.title, styles.textWhite]}>Ingredienser:</Text>
-              {selectedFood.ingredients ? <Text style={styles.textWhite}>{selectedFood.ingredients}</Text> : <Text style={styles.textWhite}>Ingredienser er ikke tilgængelige for denne madvare.</Text>}
-              {/* Button to go back to the list */}
-              <Pressable style={styles.backButton} onPress={() => setSelectedFood(null)}>
-                <Text style={styles.textWhiteBold}>Tilbage til listen</Text>
-              </Pressable>
-              {/* <Pressable onPress={() => setSelectedFood(null)} style={styles.backButton}>
+                  </View>
+                ) : (
+                  // Show details of the selected food
+                  <View key={selectedFood.id} style={styles.container}>
+                    <Text style={[styles.name, styles.textWhite]}>{selectedFood.name}</Text>
+                    <Image
+                      source={{
+                        uri: selectedFood.imageUri || "https://cdn.creazilla.com/icons/3433516/food-icon-md.png",
+                      }}
+                      style={styles.image}
+                    />
+                    <Text style={[styles.title, styles.textWhite]}>Næringsindhold (pr. 100g):</Text>
+                    <Text style={styles.textWhite}>Energi: {selectedFood.nutrients.energy} kcal</Text>
+                    <Text style={styles.textWhite}>Fedt: {selectedFood.nutrients.fat}g</Text>
+                    <Text style={styles.textWhite}>Mættet Fedt: {selectedFood.nutrients.saturatedFat}g</Text>
+                    <Text style={styles.textWhite}>Kulhydrater: {selectedFood.nutrients.carbs}g</Text>
+                    <Text style={styles.textWhite}>Heraf Sukker: {selectedFood.nutrients.sugars}g</Text>
+                    <Text style={styles.textWhite}>Protein: {selectedFood.nutrients.protein}g</Text>
+                    <Text style={styles.textWhite}>OBS: Tallene kan være forkerte/forældede</Text>
+                    <Text style={[styles.title, styles.textWhite]}>Ingredienser:</Text>
+                    {selectedFood.ingredients ? (
+                      <Text style={styles.textWhite}>{selectedFood.ingredients}</Text>
+                    ) : (
+                      <Text style={styles.textWhite}>Ingredienser er ikke tilgængelige for denne madvare.</Text>
+                    )}
+                    {/* Button to go back to the list */}
+                    <Pressable style={styles.backButton} onPress={() => setSelectedFood(null)}>
+                      <Text style={styles.textWhiteBold}>Tilbage til listen</Text>
+                    </Pressable>
+                    {/* <Pressable onPress={() => setSelectedFood(null)} style={styles.backButton}>
                 <Text style={styles.textWhite}>Tilbage til listen</Text>
               </Pressable> */}
-            </View>
-          )}
-        </ScrollView>
-      </View>
+                  </View>
+                )}
+              </Animated.View>
+            </GestureDetector>
+          </ScrollView>
+        </View>
+      </GestureHandlerRootView>
     );
   }
   return (
@@ -202,6 +240,16 @@ export default function MyPage() {
 }
 
 const styles = StyleSheet.create({
+  box: {
+    width: 100,
+    height: 100,
+    backgroundColor: "blue",
+    margin: 30,
+  },
+
+  rootView: {
+    flex: 1,
+  },
   outerTitle: {
     fontSize: 24,
     fontWeight: "bold",

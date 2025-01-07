@@ -15,7 +15,7 @@ interface FoodItemProps {
   foodList: FoodType[];
 }
 
-export default function MyPage2() {
+export default function GestureList() {
   const [food, setFood] = useState<FoodType[]>([]);
   const [selectedFood, setSelectedFood] = useState<FoodType | null>(null);
 
