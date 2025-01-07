@@ -4,10 +4,7 @@ import { FoodType, fetchFood, deleteFoodItem } from "@/app/fetch";
 import { firestore } from "@/firebaseConfig";
 import { Ionicons } from "@expo/vector-icons";
 import { login, auth } from "@/firebaseConfig";
-import { onAuthStateChanged, getAuth, signOut, createUserWithEmailAndPassword, } from "firebase/auth";
-
-
-
+import { onAuthStateChanged, getAuth, signOut, createUserWithEmailAndPassword } from "firebase/auth";
 
 export default function MyPage() {
   const [food, setFood] = useState<FoodType[]>([]);
@@ -18,7 +15,6 @@ export default function MyPage() {
   const [enteredEmail, setEnteredEmail] = useState("lise@email.test");
   const [enteredPassword, setEnteredPassword] = useState("test1234");
   const [userId, setUserId] = useState<string | null>(null);
-  
 
   useEffect(() => {
     const unsubscribe = fetchFood(firestore, setFood);
@@ -187,7 +183,7 @@ export default function MyPage() {
         <Text>log venligst ind</Text>
       </View>
     </View>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
@@ -219,7 +215,7 @@ const styles = StyleSheet.create({
     height: 200,
     resizeMode: "contain",
     marginBottom: 20,
-    alignSelf: "center"
+    alignSelf: "center",
   },
   name: {
     fontSize: 24,
@@ -269,4 +265,3 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
 });
-
