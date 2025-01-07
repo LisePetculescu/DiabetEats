@@ -171,23 +171,17 @@ const styles = StyleSheet.create({
     color: "black",
   },
   textWhite: {
-    color: "#fff",
+    color: "white",
   },
   foodItem: {
+    marginBottom: 10,
     borderWidth: 2,
     borderRadius: 10,
     borderColor: "#000",
     padding: 10,
-    marginBottom: 10,
     backgroundColor: "#ffb5b5",
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
+    // Use boxShadow instead of shadow*
+    boxShadow: "0px 2px 3.84px rgba(0, 0, 0, 0.25)",
   },
   foodItemRow: {
     flexDirection: "row",
@@ -202,3 +196,75 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
 });
+
+// const styles = StyleSheet.create({
+//   outerTitle: {
+//     fontSize: 24,
+//     fontWeight: "bold",
+//     marginBottom: 10,
+//   },
+//   outerContainer: {
+//     flex: 1,
+//     backgroundColor: "#407088",
+//     padding: 10,
+//   },
+//   scrollContainer: {
+//     flexGrow: 1,
+//     justifyContent: "center",
+//     alignItems: "center",
+//   },
+//   titleContainer: {
+//     flex: 1,
+//     backgroundColor: "#407088",
+//   },
+//   container: {
+//     flex: 1,
+//     padding: 20,
+//   },
+//   image: {
+//     width: 200,
+//     height: 200,
+//     resizeMode: "contain",
+//     marginBottom: 20,
+//     alignSelf: "center",
+//   },
+//   name: {
+//     fontSize: 24,
+//     fontWeight: "bold",
+//     marginBottom: 10,
+//   },
+//   title: {
+//     fontSize: 18,
+//     fontWeight: "bold",
+//     marginBottom: 10,
+//   },
+//   textBlack: {
+//     color: "black",
+//   },
+//   textWhite: {
+//     color: "#fff",
+//   },
+//   foodItem: {
+//     borderWidth: 2,
+//     borderRadius: 10,
+//     borderColor: "#000",
+//     padding: 10,
+//     marginBottom: 10,
+//     backgroundColor: "#ffb5b5",
+//     // Use boxShadow instead of shadow*
+//     boxShadow: "0px 2px 3.84px rgba(0, 0, 0, 0.25)",
+//   },
+
+//   foodItemRow: {
+//     flexDirection: "row",
+//     justifyContent: "space-between",
+//     alignItems: "center",
+//   },
+//   backButton: {
+//     marginTop: 20,
+//     padding: 10,
+//     backgroundColor: "#3d5a80",
+//     borderRadius: 5,
+//     alignItems: "center",
+//   },
+// });

@@ -1,19 +1,81 @@
-import { Text, View, StyleSheet, ScrollView, Image, Pressable, Alert } from "react-native";
+import { Text, View, StyleSheet, ScrollView, Image, Pressable, Alert, TextInput, Platform } from "react-native";
 import React, { useEffect, useState } from "react";
 import { FoodType, fetchFood, deleteFoodItem } from "@/app/fetch";
 import { firestore } from "@/firebaseConfig";
 import { Ionicons } from "@expo/vector-icons";
+import { login, auth, app } from "@/firebaseConfig";
+import { onAuthStateChanged, getAuth, signOut, createUserWithEmailAndPassword, initializeAuth, getReactNativePersistence} from "firebase/auth";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
+// web or device
+// let auth: any;
+// if (Platform.OS === "web") {
+//   auth = getAuth(app);
+// } else {
+//   auth = initializeAuth(app, {
+//     persistence: getReactNativePersistence(AsyncStorage),
+//   });
+// }
 
 export default function MyPage() {
   const [food, setFood] = useState<FoodType[]>([]);
   const [selectedFood, setSelectedFood] = useState<FoodType | null>(null);
 
+  const [loggedIn, setLoggedIn] = useState(false);
+
+  const [enteredEmail, setEnteredEmail] = useState("lise@email.test");
+  const [enteredPassword, setEnteredPassword] = useState("test1234");
+  const [userId, setUserId] = useState<string | null>(null);
+  
+
   useEffect(() => {
     const unsubscribe = fetchFood(firestore, setFood);
 
-    // Cleanup subscription on unmount
+    // kaldes når componenten ikke længere er aktiv
     return () => unsubscribe();
   }, []);
+
+  // handle log in state
+  useEffect(() => {
+    const auth_ = getAuth();
+    const unsubscribe = onAuthStateChanged(auth_, (currentUser) => {
+      // if we´re logged in set user id
+      if (currentUser) {
+        setUserId(currentUser.uid);
+      } else {
+        setUserId(null);
+      }
+    });
+    // kaldes når componenten ikke længere er aktiv
+    return () => unsubscribe();
+  });
+
+  // Handle login
+  const handleLogin = async () => {
+    try {
+      const user = await login(enteredEmail, enteredPassword);
+      setUserId(user.uid);
+      setLoggedIn(true);
+    } catch (error) {
+      Alert.alert("Login Failed");
+      setLoggedIn(false);
+    }
+  };
+
+  async function handleSignup() {
+    try {
+      const userCredential = await createUserWithEmailAndPassword(auth, enteredEmail, enteredPassword);
+      console.log("Oprettet ny bruger: ", userCredential.user.uid);
+    } catch (error) {
+      console.error("ny bruger blev ikke oprettet");
+      Alert.alert("ny bruger blev ikke oprettet");
+    }
+  }
+
+  async function handleSignOut() {
+    await signOut(auth);
+    setLoggedIn(false);
+  }
 
   // Handle food name click
   const handleFoodClick = (foodItem: FoodType) => {
@@ -44,55 +106,99 @@ export default function MyPage() {
     );
   };
 
-  return (
-    <View style={styles.outerContainer}>
-      <ScrollView contentContainerStyle={styles.scrollContainer}>
-        {/* Show food names */}
-        {!selectedFood ? (
-          <View style={styles.titleContainer}>
-            <Text style={styles.outerTitle}>Gemte madvarer</Text>
-            <View style={styles.outerContainer}>
-              {food.map((item) => (
-                <Pressable key={item.id} onPress={() => handleFoodClick(item)} style={styles.foodItem}>
-                  <View style={styles.foodItemRow}>
-                    <Text style={styles.textBlack}>{item.name}</Text>
-                    <Pressable onPress={() => handleDeleteFood(item)}>
-                      <Ionicons name="trash" size={24} color="white" />
-                    </Pressable>
-                  </View>
-                </Pressable>
-              ))}
+  if (!loggedIn) {
+    return (
+      <View style={[styles.container, styles.outerContainer, styles.loginSignup]}>
+        <View>
+          <Text style={styles.title}>Login</Text>
+          <TextInput style={styles.foodItem} onChangeText={(newText) => setEnteredEmail(newText)} value={enteredEmail} />
+          <TextInput style={styles.foodItem} onChangeText={(newText) => setEnteredPassword(newText)} value={enteredPassword} />
+          <Pressable style={styles.backButton} onPress={handleLogin}>
+            <Text style={styles.textWhiteBold}>Log Ind</Text>
+          </Pressable>
+          {/* <Button title="Log in" onPress={handleLogin} /> */}
+        </View>
+        <View>
+          <Text style={styles.title}>Opret profil</Text>
+          <TextInput style={styles.foodItem} onChangeText={(newText) => setEnteredEmail(newText)} value={enteredEmail} />
+          <TextInput style={styles.foodItem} onChangeText={(newText) => setEnteredPassword(newText)} value={enteredPassword} />
+          <Pressable style={styles.backButton} onPress={handleSignup}>
+            <Text style={styles.textWhiteBold}>Opret Profil</Text>
+          </Pressable>
+          {/* <Button title="Signup" onPress={signup} /> */}
+        </View>
+      </View>
+    );
+  }
+
+  if (userId) {
+    return (
+      <View style={styles.outerContainer}>
+        <View style={styles.foodItemRow}>
+          <Text style={styles.title}>User: {enteredEmail}</Text>
+          <Pressable style={styles.backButton} onPress={handleSignOut}>
+            <Text style={styles.textWhiteBold}>Logud</Text>
+          </Pressable>
+          {/* <Button style={styles.backButton} title="Log ud" onPress={handleSignOut} /> */}
+        </View>
+        <ScrollView contentContainerStyle={styles.scrollContainer}>
+          {/* Show food names */}
+          {!selectedFood ? (
+            <View style={styles.titleContainer}>
+              <Text style={styles.outerTitle}>Gemte madvarer</Text>
+              <View style={styles.outerContainer}>
+                {food.map((item) => (
+                  <Pressable key={item.id} onPress={() => handleFoodClick(item)} style={styles.foodItem}>
+                    <View style={styles.foodItemRow}>
+                      <Text style={styles.textBlack}>{item.name}</Text>
+                      <Pressable onPress={() => handleDeleteFood(item)}>
+                        <Ionicons name="trash" size={24} color="white" />
+                      </Pressable>
+                    </View>
+                  </Pressable>
+                ))}
+              </View>
             </View>
-          </View>
-        ) : (
-          // Show details of the selected food
-          <View key={selectedFood.id} style={styles.container}>
-            <Text style={[styles.name, styles.textWhite]}>{selectedFood.name}</Text>
-            <Image
-              source={{
-                uri: selectedFood.imageUri || "https://cdn.creazilla.com/icons/3433516/food-icon-md.png",
-              }}
-              style={styles.image}
-            />
-            <Text style={[styles.title, styles.textWhite]}>Næringsindhold (pr. 100g):</Text>
-            <Text style={styles.textWhite}>Energi: {selectedFood.nutrients.energy} kcal</Text>
-            <Text style={styles.textWhite}>Fedt: {selectedFood.nutrients.fat}g</Text>
-            <Text style={styles.textWhite}>Mættet Fedt: {selectedFood.nutrients.saturatedFat}g</Text>
-            <Text style={styles.textWhite}>Kulhydrater: {selectedFood.nutrients.carbs}g</Text>
-            <Text style={styles.textWhite}>Heraf Sukker: {selectedFood.nutrients.sugars}g</Text>
-            <Text style={styles.textWhite}>Protein: {selectedFood.nutrients.protein}g</Text>
-            <Text style={styles.textWhite}>OBS: Tallene kan være forkerte/forældede</Text>
-            <Text style={[styles.title, styles.textWhite]}>Ingredienser:</Text>
-            {selectedFood.ingredients ? <Text style={styles.textWhite}>{selectedFood.ingredients}</Text> : <Text style={styles.textWhite}>Ingredienser er ikke tilgængelige for denne madvare.</Text>}
-            {/* Button to go back to the list */}
-            <Pressable onPress={() => setSelectedFood(null)} style={styles.backButton}>
-              <Text style={styles.textWhite}>Tilbage til listen</Text>
-            </Pressable>
-          </View>
-        )}
-      </ScrollView>
+          ) : (
+            // Show details of the selected food
+            <View key={selectedFood.id} style={styles.container}>
+              <Text style={[styles.name, styles.textWhite]}>{selectedFood.name}</Text>
+              <Image
+                source={{
+                  uri: selectedFood.imageUri || "https://cdn.creazilla.com/icons/3433516/food-icon-md.png",
+                }}
+                style={styles.image}
+              />
+              <Text style={[styles.title, styles.textWhite]}>Næringsindhold (pr. 100g):</Text>
+              <Text style={styles.textWhite}>Energi: {selectedFood.nutrients.energy} kcal</Text>
+              <Text style={styles.textWhite}>Fedt: {selectedFood.nutrients.fat}g</Text>
+              <Text style={styles.textWhite}>Mættet Fedt: {selectedFood.nutrients.saturatedFat}g</Text>
+              <Text style={styles.textWhite}>Kulhydrater: {selectedFood.nutrients.carbs}g</Text>
+              <Text style={styles.textWhite}>Heraf Sukker: {selectedFood.nutrients.sugars}g</Text>
+              <Text style={styles.textWhite}>Protein: {selectedFood.nutrients.protein}g</Text>
+              <Text style={styles.textWhite}>OBS: Tallene kan være forkerte/forældede</Text>
+              <Text style={[styles.title, styles.textWhite]}>Ingredienser:</Text>
+              {selectedFood.ingredients ? <Text style={styles.textWhite}>{selectedFood.ingredients}</Text> : <Text style={styles.textWhite}>Ingredienser er ikke tilgængelige for denne madvare.</Text>}
+              {/* Button to go back to the list */}
+              <Pressable style={styles.backButton} onPress={() => setSelectedFood(null)}>
+                <Text style={styles.textWhiteBold}>Tilbage til listen</Text>
+              </Pressable>
+              {/* <Pressable onPress={() => setSelectedFood(null)} style={styles.backButton}>
+                <Text style={styles.textWhite}>Tilbage til listen</Text>
+              </Pressable> */}
+            </View>
+          )}
+        </ScrollView>
+      </View>
+    );
+  }
+  return (
+    <View>
+      <View>
+        <Text>log venligst ind</Text>
+      </View>
     </View>
-  );
+  )
 }
 
 const styles = StyleSheet.create({
@@ -100,7 +206,6 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: "bold",
     marginBottom: 10,
-    // alignSelf: "center"
   },
   outerContainer: {
     flex: 1,
@@ -125,7 +230,7 @@ const styles = StyleSheet.create({
     height: 200,
     resizeMode: "contain",
     marginBottom: 20,
-    alignSelf: "center",
+    alignSelf: "center"
   },
   name: {
     fontSize: 24,
@@ -141,25 +246,21 @@ const styles = StyleSheet.create({
     color: "black",
   },
   textWhite: {
-    color: "#fff",
+    color: "white",
+  },
+  textWhiteBold: {
+    color: "white",
+    fontWeight: 800,
   },
   foodItem: {
+    marginBottom: 10,
     borderWidth: 2,
     borderRadius: 10,
     borderColor: "#000",
     padding: 10,
-    marginBottom: 10,
     backgroundColor: "#ffb5b5",
-    // Shadow for iOS
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    // Shadow for Android
-    elevation: 5,
+    // Use boxShadow instead of shadow*
+    boxShadow: "0px 2px 3.84px rgba(0, 0, 0, 0.25)",
   },
   foodItemRow: {
     flexDirection: "row",
@@ -167,10 +268,16 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   backButton: {
-    marginTop: 20,
+    marginTop: 10,
     padding: 10,
-    backgroundColor: "#3d5a80",
+    backgroundColor: "rgb(63 151 246)",
     borderRadius: 5,
     alignItems: "center",
   },
+  loginSignup: {
+    flexDirection: "row",
+    justifyContent: "space-evenly",
+    alignItems: "center",
+  },
 });
+
