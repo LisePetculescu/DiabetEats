@@ -17,6 +17,7 @@ export default function MyPage() {
   const [userId, setUserId] = useState<string | null>(null);
 
   useEffect(() => {
+    // callback funktinen i fetchFood givet setFood array af mad
     const unsubscribe = fetchFood(firestore, setFood);
 
     // kaldes når componenten ikke længere er aktiv
@@ -55,8 +56,8 @@ export default function MyPage() {
       const userCredential = await createUserWithEmailAndPassword(auth, enteredEmail, enteredPassword);
       console.log("Oprettet ny bruger: ", userCredential.user.uid);
     } catch (error) {
-      console.error("ny bruger blev ikke oprettet");
-      Alert.alert("ny bruger blev ikke oprettet");
+      console.error("fejl", error);
+      Alert.alert("fejl, kunne ikke oprette bruger");
     }
   }
 
